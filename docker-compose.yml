@@ -1,0 +1,92 @@
+version: "3.9"
+services:
+  crypto-alerts-django:
+    image: python:3.11
+    container_name: crypto-alerts-django
+    working_dir: /usr/src/app
+    ports:
+      - "8000:8000"
+    volumes:
+      - ./CryptoPriceAlerts:/usr/src/app
+    command: >
+      bash -c "
+        pip install --upgrade pip &&
+        pip install -r requirements.txt &&
+        python manage.py migrate &&
+        python manage.py ensure_admin &&
+        python manage.py runserver 0:8000
+      "
+    environment:
+      DEBUG: True
+      DATABASE_URL: "postgres://postgres:password@crypto-alerts-postgres:5432/postgres"
+      DJANGO_SECRET_KEY: "django-insecure-hv4_#g4j2nc&_*u51yge$g#*@(00a+s-4+8p8&(b1#grc_v!z&"
+      DJANGO_SUPERUSER_USERNAME: admin
+      DJANGO_SUPERUSER_PASSWORD: admin
+      DJANGO_SUPERUSER_EMAIL: admin.user@email.com
+      CELERY_BROKER_URL: "redis://crypto-alerts-redis:6379/0"
+      CELERY_RESULT_BACKEND: "redis://crypto-alerts-redis:6379/1"
+      REDIS_CACHE_URL: "redis://crypto-alerts-redis:6379/2"
+    depends_on:
+      - crypto-alerts-postgres
+
+  crypto-alerts-django-alert-command:
+    image: python:3.11
+    container_name: crypto-alerts-django-alert-command
+    working_dir: /usr/src/app
+    volumes:
+      - ./CryptoPriceAlerts:/usr/src/app
+    command: >
+      bash -c "
+        pip install --upgrade pip &&
+        pip install -r requirements.txt &&
+        python manage.py send_alerts
+      "
+    environment:
+      DEBUG: True
+      DATABASE_URL: "postgres://postgres:password@crypto-alerts-postgres:5432/postgres"
+      DJANGO_SECRET_KEY: "django-insecure-hv4_#g4j2nc&_*u51yge$g#*@(00a+s-4+8p8&(b1#grc_v!z&"
+      CELERY_BROKER_URL: "redis://crypto-alerts-redis:6379/0"
+      CELERY_RESULT_BACKEND: "redis://crypto-alerts-redis:6379/1"
+      REDIS_CACHE_URL: "redis://crypto-alerts-redis:6379/2"
+    depends_on:
+      - crypto-alerts-postgres
+      - crypto-alerts-django
+      
+  crypto-alerts-postgres:
+    image: postgres
+    container_name: crypto-alerts-postgres
+    restart: always
+    environment:
+      POSTGRES_PASSWORD: password
+
+  crypto-alerts-redis:
+    image: redis:7
+    container_name: crypto-alerts-redis
+    ports:
+      - "6379:6379"
+    tty: true
+
+  crypto-alerts-celery:
+    image: python:3.11
+    container_name: crypto-alerts-celery
+    working_dir: /usr/src/app
+    volumes:
+      - ./CryptoPriceAlerts:/usr/src/app
+    command: >
+      bash -c "
+        pip install --upgrade pip &&
+        pip install -r requirements.txt &&
+        celery -A CryptoPriceAlerts worker -l INFO
+      "
+    environment:
+      DATABASE_URL: "postgres://postgres:password@crypto-alerts-postgres:5432/postgres"
+      DJANGO_SECRET_KEY: "django-insecure-hv4_#g4j2nc&_*u51yge$g#*@(00a+s-4+8p8&(b1#grc_v!z&"
+      CELERY_BROKER_URL: "redis://crypto-alerts-redis:6379/0"
+      CELERY_RESULT_BACKEND: "redis://crypto-alerts-redis:6379/1"
+      REDIS_CACHE_URL: "redis://crypto-alerts-redis:6379/2"
+    depends_on:
+      - crypto-alerts-redis
+      - crypto-alerts-postgres
+      - crypto-alerts-django
+
+# python manage.py createsuperuser --no-input &&
