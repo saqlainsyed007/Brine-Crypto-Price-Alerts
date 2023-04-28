@@ -6,7 +6,7 @@ from alerts.models import Alert
 class AlertAdmin(admin.ModelAdmin):
     model = Alert
     list_display = (
-        "user", "coin_id", "alert_price", "alert_status",
+        "id", "user", "coin_id", "alert_price", "alert_status",
         "triggered_time", "created", "updated",
     )
     search_fields = (
