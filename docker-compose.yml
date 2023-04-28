@@ -48,6 +48,7 @@ services:
       CELERY_BROKER_URL: "redis://crypto-alerts-redis:6379/0"
       CELERY_RESULT_BACKEND: "redis://crypto-alerts-redis:6379/1"
       REDIS_CACHE_URL: "redis://crypto-alerts-redis:6379/2"
+      MOCK_PRICE_VARIATION: True
     depends_on:
       - crypto-alerts-postgres
       - crypto-alerts-django

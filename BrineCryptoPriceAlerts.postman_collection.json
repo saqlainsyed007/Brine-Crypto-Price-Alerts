@@ -70,7 +70,7 @@
 				"header": [],
 				"body": {
 					"mode": "raw",
-					"raw": "{\n    \"username\": \"admin\",\n    \"password\": \"admin\"\n}",
+					"raw": "{\n    \"username\": \"alertsuser001\",\n    \"password\": \"password\"\n}",
 					"options": {
 						"raw": {
 							"language": "json"
@@ -183,7 +183,7 @@
 					}
 				],
 				"url": {
-					"raw": "http://localhost:8000/alerts/?page=1&alert_status=created",
+					"raw": "http://localhost:8000/alerts/?page=1",
 					"protocol": "http",
 					"host": [
 						"localhost"
@@ -200,7 +200,8 @@
 						},
 						{
 							"key": "alert_status",
-							"value": "created"
+							"value": "created",
+							"disabled": true
 						}
 					]
 				}
@@ -219,7 +220,7 @@
 					}
 				],
 				"url": {
-					"raw": "http://localhost:8000/alerts/3",
+					"raw": "http://localhost:8000/alerts/4",
 					"protocol": "http",
 					"host": [
 						"localhost"
@@ -227,7 +228,7 @@
 					"port": "8000",
 					"path": [
 						"alerts",
-						"3"
+						"4"
 					]
 				}
 			},
@@ -245,7 +246,7 @@
 					}
 				],
 				"url": {
-					"raw": "http://localhost:8000/alerts/42",
+					"raw": "http://localhost:8000/alerts/4",
 					"protocol": "http",
 					"host": [
 						"localhost"
@@ -253,7 +254,7 @@
 					"port": "8000",
 					"path": [
 						"alerts",
-						"42"
+						"4"
 					]
 				}
 			},

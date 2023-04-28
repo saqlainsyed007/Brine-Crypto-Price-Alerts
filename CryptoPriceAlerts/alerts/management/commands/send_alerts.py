@@ -16,7 +16,7 @@ class Command(BaseCommand):
     def handle(self, *args, **options):
         while True:
 
-            time.sleep(60)
+            time.sleep(10)
 
             last_known_prices = cache.get("last_known_coin_prices", {})
             current_prices = {}

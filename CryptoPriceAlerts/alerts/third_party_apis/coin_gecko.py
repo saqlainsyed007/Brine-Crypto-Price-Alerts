@@ -1,7 +1,9 @@
 import logging
+import random
 import requests
 import traceback
 
+from django.conf import settings
 from alerts.models import Alert
 
 logger = logging.getLogger(__name__)
@@ -32,6 +34,11 @@ class CoinGecko:
         # system to coin id recognised by coin gecko
         return [self.coin_id_map[coin_id] for coin_id in coin_ids]
 
+    @staticmethod
+    def mock_price_variation(price):
+        offset = random.choice(range(85, 120, 5))
+        return price * offset / 100
+
     def format_coins_market_data(self, coins_market_data):
         # Format response received from coin gecko
         result = {}
@@ -39,8 +46,11 @@ class CoinGecko:
             coin_id = self.coin_id_reverse_map.get(coin_market_data["id"])
             if not coin_id:
                 continue
+            current_price = coin_market_data["current_price"]
+            if settings.MOCK_PRICE_VARIATION:
+                current_price = self.mock_price_variation(current_price)
             result[coin_id] = {
-                "current_price": coin_market_data["current_price"]
+                "current_price": current_price
             }
         return result
 
