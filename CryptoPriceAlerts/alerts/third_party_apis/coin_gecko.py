@@ -28,9 +28,12 @@ class CoinGecko:
         }
 
     def get_coin_gecko_coin_ids(self, coin_ids):
+        # Convert ticker symbol stored by our
+        # system to coin id recognised by coin gecko
         return [self.coin_id_map[coin_id] for coin_id in coin_ids]
 
     def format_coins_market_data(self, coins_market_data):
+        # Format response received from coin gecko
         result = {}
         for coin_market_data in coins_market_data:
             coin_id = self.coin_id_reverse_map.get(coin_market_data["id"])
@@ -42,6 +45,7 @@ class CoinGecko:
         return result
 
     def get_coins_market_data(self, coin_ids):
+        log_tag = "CoinGecko.get_coins_market_data"
         coin_ids = self.get_coin_gecko_coin_ids(coin_ids)
         coins_market_url = "coins/markets/"
         params = {
@@ -53,17 +57,17 @@ class CoinGecko:
             "sparkline": False
         }
         full_url = f"{self.base_url}{coins_market_url}"
-        logger.info(f"Coin Gecko API Call. URL: {full_url}, Params: {params}")
+        logger.info(f"{log_tag} Coin Gecko API Call. URL: {full_url}, Params: {params}")
         try:
             coins_market_response = requests.get(full_url, params=params)
         except Exception as xcptn:
             traceback.print_exc()
-            logger.exception(f"An error occured while retrieving data from coin gecko. Error: {xcptn}")
+            logger.exception(f"{log_tag} An error occured while retrieving data from coin gecko. Error: {xcptn}")
             return []
         if coins_market_response.status_code != 200:
             logger.error(
-                "An error occured while retrieving data from coin gecko. "
-                f"Error Status: {coins_market_response.status_code}. "
+                f"{log_tag} An error occured while retrieving data from "
+                f"coin gecko. Response Status: {coins_market_response.status_code}. "
                 f"Error Message: {coins_market_response.text}."
             )
             return []

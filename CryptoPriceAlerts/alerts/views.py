@@ -20,6 +20,7 @@ class AlertListCreateAPIView(ListCreateAPIView):
 
     permission_classes = [IsAuthenticated]
     serializer_class = AlertSerializer
+    cache_key_template = "alerts_user_{user_id}_{alert_status}_{page_number}"
 
     def get_queryset(self):
 
@@ -36,19 +37,21 @@ class AlertListCreateAPIView(ListCreateAPIView):
     def list(self, request, *args, **kwargs):
         page_number = self.request.query_params.get("page", 1)
         alert_status = self.request.query_params.get("alert_status")
-        cache_key = f"alerts_user_{request.user.id}_{alert_status}_{page_number}"
+        cache_key = self.cache_key_template.format(
+            user_id=request.user.id, alert_status=alert_status, page_number=page_number
+        )
         cached_alerts = cache.get(cache_key)
         if cached_alerts:
             logger.info(
                 f"Alert List Cached Response. User: {request.user.username}, "
-                f"Alert Status {alert_status}, Page: {page_number}"
+                f"Alert Status: {alert_status}, Page: {page_number}"
             )
             return Response(data=cached_alerts)
         response = super().list(request, *args, **kwargs)
         if response.status_code == status.HTTP_200_OK:
             logger.info(
                 f"Setting cache for --> User: {request.user.username}, "
-                f"Alert Status {alert_status}, Page: {page_number}"
+                f"Alert Status: {alert_status}, Page: {page_number}"
             )
             cache.set(cache_key, response.data)
         return response
@@ -73,7 +76,7 @@ class AlertRetrieveDestroyAPIView(RetrieveDestroyAPIView):
         alert = self.get_object()
         if alert.alert_status == Alert.AlertStatus.DELETED:
             logger.error(
-                f"Trying to deleted a deleted alert. User: {self.request.user.id}, Alert: {alert.id}"
+                f"Trying to delete a deleted alert. User: {self.request.user.id}, Alert: {alert.id}"
             )
             raise Http404
         alert.alert_status = Alert.AlertStatus.DELETED
