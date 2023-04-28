@@ -89,9 +89,159 @@
 						"token",
 						""
 					]
-				}
+				},
+				"description": "This API is used to logging into the application.\n\nWe use JWT login system. An ID and a password is sent to the server which returns an access token and a refresh token.\n\nThe access token can be used to make further API calls using header\n\n`Authorisation: Bearer`\n\nThe access token automatically expires in 5 minutes. You need to use the refresh token to retrieve another access token for subsequent APIs\n\nRefer to Refresh Token API\n\n**Note**\n\nIn this request, upon successful response, The access token and the refresh token are added to the environment variables so there is no need to copy and use them in the other APIs. Just call the Login API and you are ready to use the other APIs. The fresh token is used automatically."
 			},
-			"response": []
+			"response": [
+				{
+					"name": "Login Valid Credentials",
+					"originalRequest": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"username\": \"alertsuser001\",\n    \"password\": \"password\"\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "http://localhost:8000/api/token/",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8000",
+							"path": [
+								"api",
+								"token",
+								""
+							]
+						}
+					},
+					"status": "OK",
+					"code": 200,
+					"_postman_previewlanguage": "json",
+					"header": [
+						{
+							"key": "Date",
+							"value": "Fri, 28 Apr 2023 04:05:11 GMT"
+						},
+						{
+							"key": "Server",
+							"value": "WSGIServer/0.2 CPython/3.11.3"
+						},
+						{
+							"key": "Content-Type",
+							"value": "application/json"
+						},
+						{
+							"key": "Vary",
+							"value": "Accept"
+						},
+						{
+							"key": "Allow",
+							"value": "POST, OPTIONS"
+						},
+						{
+							"key": "X-Frame-Options",
+							"value": "DENY"
+						},
+						{
+							"key": "Content-Length",
+							"value": "483"
+						},
+						{
+							"key": "X-Content-Type-Options",
+							"value": "nosniff"
+						},
+						{
+							"key": "Referrer-Policy",
+							"value": "same-origin"
+						}
+					],
+					"cookie": [],
+					"body": "{\n    \"refresh\": \"eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ0b2tlbl90eXBlIjoicmVmcmVzaCIsImV4cCI6MTY4Mjc0MTExMSwiaWF0IjoxNjgyNjU0NzExLCJqdGkiOiJhZDQyOTcyMDZhMmE0OTVmYmNmYzBjOTBhMDgzMjAzNCIsInVzZXJfaWQiOjJ9.g-hfDDNBCoEpg15CM_1ScFSYql2UK90NFqTuaAcsh3s\",\n    \"access\": \"eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ0b2tlbl90eXBlIjoiYWNjZXNzIiwiZXhwIjoxNjgyNjU1MDExLCJpYXQiOjE2ODI2NTQ3MTEsImp0aSI6IjE5YWM4ODNlZTNiYzRhNTU4ODk5N2M3NTAzOTQxNWVmIiwidXNlcl9pZCI6Mn0.fKFH_P_sE9hayQtBd2FzObgEwzzfF6N5jjUDEdTulfQ\"\n}"
+				},
+				{
+					"name": "Login Invalid Credentials",
+					"originalRequest": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"username\": \"alertsuser001\",\n    \"password\": \"incorrectpassword\"\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "http://localhost:8000/api/token/",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8000",
+							"path": [
+								"api",
+								"token",
+								""
+							]
+						}
+					},
+					"status": "Unauthorized",
+					"code": 401,
+					"_postman_previewlanguage": "json",
+					"header": [
+						{
+							"key": "Date",
+							"value": "Fri, 28 Apr 2023 05:33:42 GMT"
+						},
+						{
+							"key": "Server",
+							"value": "WSGIServer/0.2 CPython/3.11.3"
+						},
+						{
+							"key": "Content-Type",
+							"value": "application/json"
+						},
+						{
+							"key": "WWW-Authenticate",
+							"value": "Bearer realm=\"api\""
+						},
+						{
+							"key": "Vary",
+							"value": "Accept"
+						},
+						{
+							"key": "Allow",
+							"value": "POST, OPTIONS"
+						},
+						{
+							"key": "X-Frame-Options",
+							"value": "DENY"
+						},
+						{
+							"key": "Content-Length",
+							"value": "63"
+						},
+						{
+							"key": "X-Content-Type-Options",
+							"value": "nosniff"
+						},
+						{
+							"key": "Referrer-Policy",
+							"value": "same-origin"
+						}
+					],
+					"cookie": [],
+					"body": "{\n    \"detail\": \"No active account found with the given credentials\"\n}"
+				}
+			]
 		},
 		{
 			"name": "Refresh Token",
@@ -132,9 +282,238 @@
 						"refresh",
 						""
 					]
-				}
+				},
+				"description": "This API is used to retrieve a new Access Token\n\nThe access token received in the Login API expires in 5 mins. However, the refresh token is valid for 24 hours and can be used to retrieve a new access token\n\nA Refresh Token can only be used once. The refresh token API also returns a new refresh token that can be used next time to retrieve the access token\n\n**Note**\n\nIn this request, upon successful response, The access token and the refresh token are added to the environment variables so there is no need to copy and use them in the other APIs. The fresh ones are used automatically.\n\nJust call the Refresh Token API and you are ready to call it again with the new refresh token that has been automatically set in the environment variable."
 			},
-			"response": []
+			"response": [
+				{
+					"name": "Refresh Token Valid",
+					"originalRequest": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"refresh\": \"{{refresh_token}}\"\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "http://localhost:8000/api/token/refresh/",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8000",
+							"path": [
+								"api",
+								"token",
+								"refresh",
+								""
+							]
+						}
+					},
+					"status": "OK",
+					"code": 200,
+					"_postman_previewlanguage": "json",
+					"header": [
+						{
+							"key": "Date",
+							"value": "Fri, 28 Apr 2023 05:42:26 GMT"
+						},
+						{
+							"key": "Server",
+							"value": "WSGIServer/0.2 CPython/3.11.3"
+						},
+						{
+							"key": "Content-Type",
+							"value": "application/json"
+						},
+						{
+							"key": "Vary",
+							"value": "Accept"
+						},
+						{
+							"key": "Allow",
+							"value": "POST, OPTIONS"
+						},
+						{
+							"key": "X-Frame-Options",
+							"value": "DENY"
+						},
+						{
+							"key": "Content-Length",
+							"value": "483"
+						},
+						{
+							"key": "X-Content-Type-Options",
+							"value": "nosniff"
+						},
+						{
+							"key": "Referrer-Policy",
+							"value": "same-origin"
+						}
+					],
+					"cookie": [],
+					"body": "{\n    \"access\": \"eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ0b2tlbl90eXBlIjoiYWNjZXNzIiwiZXhwIjoxNjgyNjYwODQ2LCJpYXQiOjE2ODI2NjAwNjAsImp0aSI6IjY2MWE2MzY3OWU5YTQyNWJhMzU1YTFhNGM1NmFiMDQwIiwidXNlcl9pZCI6MX0.HkJ1ezbW59OZ_3EDAijSeYWvkAgEEqkRnG6C-URhN0Q\",\n    \"refresh\": \"eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ0b2tlbl90eXBlIjoicmVmcmVzaCIsImV4cCI6MTY4Mjc0Njk0NiwiaWF0IjoxNjgyNjYwNTQ2LCJqdGkiOiI1ZGFhZTc3ZTExYmI0ODFlOGNjNzRjMDliOGVlOGFkYyIsInVzZXJfaWQiOjF9.CP4nxh67u6-vyAXgW3ABWMiMwfiKbehEIms1ymKMVKI\"\n}"
+				},
+				{
+					"name": "Refresh Token Valid but Used",
+					"originalRequest": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"refresh\": \"eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ0b2tlbl90eXBlIjoicmVmcmVzaCIsImV4cCI6MTY4Mjc0Njk0NiwiaWF0IjoxNjgyNjYwNTQ2LCJqdGkiOiI1ZGFhZTc3ZTExYmI0ODFlOGNjNzRjMDliOGVlOGFkYyIsInVzZXJfaWQiOjF9.CP4nxh67u6-vyAXgW3ABWMiMwfiKbehEIms1ymKMVKL\"\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "http://localhost:8000/api/token/refresh/",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8000",
+							"path": [
+								"api",
+								"token",
+								"refresh",
+								""
+							]
+						}
+					},
+					"status": "Unauthorized",
+					"code": 401,
+					"_postman_previewlanguage": "json",
+					"header": [
+						{
+							"key": "Date",
+							"value": "Fri, 28 Apr 2023 05:43:24 GMT"
+						},
+						{
+							"key": "Server",
+							"value": "WSGIServer/0.2 CPython/3.11.3"
+						},
+						{
+							"key": "Content-Type",
+							"value": "application/json"
+						},
+						{
+							"key": "WWW-Authenticate",
+							"value": "Bearer realm=\"api\""
+						},
+						{
+							"key": "Vary",
+							"value": "Accept"
+						},
+						{
+							"key": "Allow",
+							"value": "POST, OPTIONS"
+						},
+						{
+							"key": "X-Frame-Options",
+							"value": "DENY"
+						},
+						{
+							"key": "Content-Length",
+							"value": "58"
+						},
+						{
+							"key": "X-Content-Type-Options",
+							"value": "nosniff"
+						},
+						{
+							"key": "Referrer-Policy",
+							"value": "same-origin"
+						}
+					],
+					"cookie": [],
+					"body": "{\n    \"detail\": \"Token is blacklisted\",\n    \"code\": \"token_not_valid\"\n}"
+				},
+				{
+					"name": "Refresh Token Invalid or Expired",
+					"originalRequest": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"refresh\": \"eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ0b2tlbl90eXBlIjoicmVmcmVzbCIsImV4cCI6MTY4Mjc0Njk0NiwiaWF0IjoxNjgyNjYwNTQ2LCJqdGkiOiI1ZGFhZTc3ZTExYmI0ODFlOGNjNzRjMDliOGVlOGFkYyIsInVzZXJfaWQiOjF9.CP4nxh67u6-vyAXgW3ABWMiMwfiKbehEIms1ymKMVKL\"\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "http://localhost:8000/api/token/refresh/",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8000",
+							"path": [
+								"api",
+								"token",
+								"refresh",
+								""
+							]
+						}
+					},
+					"status": "Unauthorized",
+					"code": 401,
+					"_postman_previewlanguage": "json",
+					"header": [
+						{
+							"key": "Date",
+							"value": "Fri, 28 Apr 2023 05:44:19 GMT"
+						},
+						{
+							"key": "Server",
+							"value": "WSGIServer/0.2 CPython/3.11.3"
+						},
+						{
+							"key": "Content-Type",
+							"value": "application/json"
+						},
+						{
+							"key": "WWW-Authenticate",
+							"value": "Bearer realm=\"api\""
+						},
+						{
+							"key": "Vary",
+							"value": "Accept"
+						},
+						{
+							"key": "Allow",
+							"value": "POST, OPTIONS"
+						},
+						{
+							"key": "X-Frame-Options",
+							"value": "DENY"
+						},
+						{
+							"key": "Content-Length",
+							"value": "65"
+						},
+						{
+							"key": "X-Content-Type-Options",
+							"value": "nosniff"
+						},
+						{
+							"key": "Referrer-Policy",
+							"value": "same-origin"
+						}
+					],
+					"cookie": [],
+					"body": "{\n    \"detail\": \"Token is invalid or expired\",\n    \"code\": \"token_not_valid\"\n}"
+				}
+			]
 		},
 		{
 			"name": "Create Alerts",
@@ -149,7 +528,7 @@
 				],
 				"body": {
 					"mode": "raw",
-					"raw": "{\n    \"coin_id\": \"btc\",\n    \"alert_price\": 21000\n}",
+					"raw": "{\n    \"coin_id\": \"btc\",\n    \"alert_price\": 28550\n}",
 					"options": {
 						"raw": {
 							"language": "json"
@@ -157,19 +536,175 @@
 					}
 				},
 				"url": {
-					"raw": "http://localhost:1000/alerts/",
+					"raw": "http://localhost:8000/alerts/",
 					"protocol": "http",
 					"host": [
 						"localhost"
 					],
-					"port": "1000",
+					"port": "8000",
 					"path": [
 						"alerts",
 						""
 					]
-				}
+				},
+				"description": "This API creates an alert for the user.\n\nRequired fields:\n\n**coin_id:** This can be one of the allowed ticker symbols. The following are currently supported:\n\n- btc\n- eth\n- usdt\n- bnb\n- xrp\n- ada\n- doge\n    \n\n**alert_price:** The price at which alert needs to be triggered"
 			},
-			"response": []
+			"response": [
+				{
+					"name": "Create Alerts - Valid Data",
+					"originalRequest": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer {{access_token}}",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"coin_id\": \"btc\",\n    \"alert_price\": 28500\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "http://localhost:8000/alerts/",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8000",
+							"path": [
+								"alerts",
+								""
+							]
+						}
+					},
+					"status": "Created",
+					"code": 201,
+					"_postman_previewlanguage": "json",
+					"header": [
+						{
+							"key": "Date",
+							"value": "Fri, 28 Apr 2023 11:10:12 GMT"
+						},
+						{
+							"key": "Server",
+							"value": "WSGIServer/0.2 CPython/3.11.3"
+						},
+						{
+							"key": "Content-Type",
+							"value": "application/json"
+						},
+						{
+							"key": "Vary",
+							"value": "Accept"
+						},
+						{
+							"key": "Allow",
+							"value": "GET, POST, HEAD, OPTIONS"
+						},
+						{
+							"key": "X-Frame-Options",
+							"value": "DENY"
+						},
+						{
+							"key": "Content-Length",
+							"value": "194"
+						},
+						{
+							"key": "X-Content-Type-Options",
+							"value": "nosniff"
+						},
+						{
+							"key": "Referrer-Policy",
+							"value": "same-origin"
+						}
+					],
+					"cookie": [],
+					"body": "{\n    \"id\": 67,\n    \"coin_id\": \"btc\",\n    \"alert_price\": \"28500.0000000000\",\n    \"alert_status\": \"created\",\n    \"triggered_time\": null,\n    \"created\": \"2023-04-28T11:10:12.781180Z\",\n    \"updated\": \"2023-04-28T11:10:12.781210Z\",\n    \"user\": 2\n}"
+				},
+				{
+					"name": "Create Alerts - Invaid Data",
+					"originalRequest": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer {{access_token}}",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"coin_id\": \"btcb\",\n    \"alert_price\": 28500\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "http://localhost:8000/alerts/",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8000",
+							"path": [
+								"alerts",
+								""
+							]
+						}
+					},
+					"status": "Bad Request",
+					"code": 400,
+					"_postman_previewlanguage": "json",
+					"header": [
+						{
+							"key": "Date",
+							"value": "Fri, 28 Apr 2023 11:10:58 GMT"
+						},
+						{
+							"key": "Server",
+							"value": "WSGIServer/0.2 CPython/3.11.3"
+						},
+						{
+							"key": "Content-Type",
+							"value": "application/json"
+						},
+						{
+							"key": "Vary",
+							"value": "Accept"
+						},
+						{
+							"key": "Allow",
+							"value": "GET, POST, HEAD, OPTIONS"
+						},
+						{
+							"key": "X-Frame-Options",
+							"value": "DENY"
+						},
+						{
+							"key": "Content-Length",
+							"value": "47"
+						},
+						{
+							"key": "X-Content-Type-Options",
+							"value": "nosniff"
+						},
+						{
+							"key": "Referrer-Policy",
+							"value": "same-origin"
+						}
+					],
+					"cookie": [],
+					"body": "{\n    \"coin_id\": [\n        \"\\\"btcb\\\" is not a valid choice.\"\n    ]\n}"
+				}
+			]
 		},
 		{
 			"name": "List Alerts",
@@ -183,7 +718,7 @@
 					}
 				],
 				"url": {
-					"raw": "http://localhost:8000/alerts/?page=1",
+					"raw": "http://localhost:8000/alerts/?page=1&alert_status=created",
 					"protocol": "http",
 					"host": [
 						"localhost"
@@ -196,17 +731,175 @@
 					"query": [
 						{
 							"key": "page",
-							"value": "1"
+							"value": "1",
+							"description": "Page number with respect to paginated response"
 						},
 						{
 							"key": "alert_status",
 							"value": "created",
-							"disabled": true
+							"description": "Status of alert. Accepted Values: created, triggered, deleted"
 						}
 					]
-				}
+				},
+				"description": "This API is used to list Alerts for a particular user.\n\nThe API is paginated. You can use `page` query param to request for a specific page number\n\nThe API also supports filtering based on alert status using query param `alert_status` currenlty accepted values are:\n\n- created\n- triggered\n- deleted"
 			},
-			"response": []
+			"response": [
+				{
+					"name": "List Alerts - List All Alerts",
+					"originalRequest": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer {{access_token}}",
+								"type": "text"
+							}
+						],
+						"url": {
+							"raw": "http://localhost:8000/alerts/?page=1",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8000",
+							"path": [
+								"alerts",
+								""
+							],
+							"query": [
+								{
+									"key": "page",
+									"value": "1",
+									"description": "page number with respect to paginated response"
+								}
+							]
+						}
+					},
+					"status": "OK",
+					"code": 200,
+					"_postman_previewlanguage": "json",
+					"header": [
+						{
+							"key": "Date",
+							"value": "Fri, 28 Apr 2023 11:21:02 GMT"
+						},
+						{
+							"key": "Server",
+							"value": "WSGIServer/0.2 CPython/3.11.3"
+						},
+						{
+							"key": "Content-Type",
+							"value": "application/json"
+						},
+						{
+							"key": "Vary",
+							"value": "Accept"
+						},
+						{
+							"key": "Allow",
+							"value": "GET, POST, HEAD, OPTIONS"
+						},
+						{
+							"key": "X-Frame-Options",
+							"value": "DENY"
+						},
+						{
+							"key": "Content-Length",
+							"value": "6926"
+						},
+						{
+							"key": "X-Content-Type-Options",
+							"value": "nosniff"
+						},
+						{
+							"key": "Referrer-Policy",
+							"value": "same-origin"
+						}
+					],
+					"cookie": [],
+					"body": "{\n    \"count\": 35,\n    \"next\": null,\n    \"previous\": null,\n    \"results\": [\n        {\n            \"id\": 5,\n            \"coin_id\": \"btc\",\n            \"alert_price\": \"29271.0000000000\",\n            \"alert_status\": \"created\",\n            \"triggered_time\": null,\n            \"created\": \"2023-04-28T10:32:02.570657Z\",\n            \"updated\": \"2023-04-28T10:32:02.570660Z\",\n            \"user\": 2\n        },\n        {\n            \"id\": 6,\n            \"coin_id\": \"btc\",\n            \"alert_price\": \"30734.5500000000\",\n            \"alert_status\": \"created\",\n            \"triggered_time\": null,\n            \"created\": \"2023-04-28T10:32:02.571236Z\",\n            \"updated\": \"2023-04-28T10:32:02.571241Z\",\n            \"user\": 2\n        },\n        {\n            \"id\": 8,\n            \"coin_id\": \"btc\",\n            \"alert_price\": \"32198.1000000000\",\n            \"alert_status\": \"created\",\n            \"triggered_time\": null,\n            \"created\": \"2023-04-28T10:32:02.572524Z\",\n            \"updated\": \"2023-04-28T10:32:02.572527Z\",\n            \"user\": 2\n        },\n        {\n            \"id\": 11,\n            \"coin_id\": \"btc\",\n            \"alert_price\": \"33661.6500000000\",\n            \"alert_status\": \"created\",\n            \"triggered_time\": null,\n            \"created\": \"2023-04-28T10:32:02.574157Z\",\n            \"updated\": \"2023-04-28T10:32:02.574160Z\",\n            \"user\": 2\n        },\n        {\n            \"id\": 12,\n            \"coin_id\": \"eth\",\n            \"alert_price\": \"1622.3185000000\",\n            \"alert_status\": \"created\",\n            \"triggered_time\": null,\n            \"created\": \"2023-04-28T10:32:02.574676Z\",\n            \"updated\": \"2023-04-28T10:32:02.574679Z\",\n            \"user\": 2\n        },\n        {\n            \"id\": 15,\n            \"coin_id\": \"eth\",\n            \"alert_price\": \"1908.6100000000\",\n            \"alert_status\": \"created\",\n            \"triggered_time\": null,\n            \"created\": \"2023-04-28T10:32:02.576206Z\",\n            \"updated\": \"2023-04-28T10:32:02.576209Z\",\n            \"user\": 2\n        },\n        {\n            \"id\": 18,\n            \"coin_id\": \"eth\",\n            \"alert_price\": \"2099.4710000000\",\n            \"alert_status\": \"created\",\n            \"triggered_time\": null,\n            \"created\": \"2023-04-28T10:32:02.577669Z\",\n            \"updated\": \"2023-04-28T10:32:02.577672Z\",\n            \"user\": 2\n        },\n        {\n            \"id\": 19,\n            \"coin_id\": \"eth\",\n            \"alert_price\": \"2194.9015000000\",\n            \"alert_status\": \"created\",\n            \"triggered_time\": null,\n            \"created\": \"2023-04-28T10:32:02.578180Z\",\n            \"updated\": \"2023-04-28T10:32:02.578184Z\",\n            \"user\": 2\n        },\n        {\n            \"id\": 22,\n            \"coin_id\": \"usdt\",\n            \"alert_price\": \"0.9000000000\",\n            \"alert_status\": \"created\",\n            \"triggered_time\": null,\n            \"created\": \"2023-04-28T10:32:02.580002Z\",\n            \"updated\": \"2023-04-28T10:32:02.580007Z\",\n            \"user\": 2\n        },\n        {\n            \"id\": 24,\n            \"coin_id\": \"usdt\",\n            \"alert_price\": \"0.9500000000\",\n            \"alert_status\": \"created\",\n            \"triggered_time\": null,\n            \"created\": \"2023-04-28T10:32:02.581300Z\",\n            \"updated\": \"2023-04-28T10:32:02.581304Z\",\n            \"user\": 2\n        },\n        {\n            \"id\": 25,\n            \"coin_id\": \"usdt\",\n            \"alert_price\": \"1.0000000000\",\n            \"alert_status\": \"created\",\n            \"triggered_time\": null,\n            \"created\": \"2023-04-28T10:32:02.581763Z\",\n            \"updated\": \"2023-04-28T10:32:02.581767Z\",\n            \"user\": 2\n        },\n        {\n            \"id\": 30,\n            \"coin_id\": \"usdt\",\n            \"alert_price\": \"1.1500000000\",\n            \"alert_status\": \"created\",\n            \"triggered_time\": null,\n            \"created\": \"2023-04-28T10:32:02.584348Z\",\n            \"updated\": \"2023-04-28T10:32:02.584351Z\",\n            \"user\": 2\n        },\n        {\n            \"id\": 35,\n            \"coin_id\": \"bnb\",\n            \"alert_price\": \"335.9580000000\",\n            \"alert_status\": \"created\",\n            \"triggered_time\": null,\n            \"created\": \"2023-04-28T10:32:02.586760Z\",\n            \"updated\": \"2023-04-28T10:32:02.586764Z\",\n            \"user\": 2\n        },\n        {\n            \"id\": 36,\n            \"coin_id\": \"bnb\",\n            \"alert_price\": \"351.9560000000\",\n            \"alert_status\": \"created\",\n            \"triggered_time\": null,\n            \"created\": \"2023-04-28T10:32:02.587250Z\",\n            \"updated\": \"2023-04-28T10:32:02.587254Z\",\n            \"user\": 2\n        },\n        {\n            \"id\": 37,\n            \"coin_id\": \"bnb\",\n            \"alert_price\": \"367.9540000000\",\n            \"alert_status\": \"created\",\n            \"triggered_time\": null,\n            \"created\": \"2023-04-28T10:32:02.587687Z\",\n            \"updated\": \"2023-04-28T10:32:02.587690Z\",\n            \"user\": 2\n        },\n        {\n            \"id\": 40,\n            \"coin_id\": \"xrp\",\n            \"alert_price\": \"0.4009509500\",\n            \"alert_status\": \"created\",\n            \"triggered_time\": null,\n            \"created\": \"2023-04-28T10:32:02.589099Z\",\n            \"updated\": \"2023-04-28T10:32:02.589102Z\",\n            \"user\": 2\n        },\n        {\n            \"id\": 43,\n            \"coin_id\": \"xrp\",\n            \"alert_price\": \"0.4717070000\",\n            \"alert_status\": \"created\",\n            \"triggered_time\": null,\n            \"created\": \"2023-04-28T10:32:02.590479Z\",\n            \"updated\": \"2023-04-28T10:32:02.590482Z\",\n            \"user\": 2\n        },\n        {\n            \"id\": 44,\n            \"coin_id\": \"xrp\",\n            \"alert_price\": \"0.4952923500\",\n            \"alert_status\": \"created\",\n            \"triggered_time\": null,\n            \"created\": \"2023-04-28T10:32:02.590969Z\",\n            \"updated\": \"2023-04-28T10:32:02.590972Z\",\n            \"user\": 2\n        },\n        {\n            \"id\": 46,\n            \"coin_id\": \"xrp\",\n            \"alert_price\": \"0.5188777000\",\n            \"alert_status\": \"created\",\n            \"triggered_time\": null,\n            \"created\": \"2023-04-28T10:32:02.591957Z\",\n            \"updated\": \"2023-04-28T10:32:02.591960Z\",\n            \"user\": 2\n        },\n        {\n            \"id\": 48,\n            \"coin_id\": \"xrp\",\n            \"alert_price\": \"0.5424630500\",\n            \"alert_status\": \"created\",\n            \"triggered_time\": null,\n            \"created\": \"2023-04-28T10:32:02.592915Z\",\n            \"updated\": \"2023-04-28T10:32:02.592918Z\",\n            \"user\": 2\n        },\n        {\n            \"id\": 50,\n            \"coin_id\": \"ada\",\n            \"alert_price\": \"0.3451918000\",\n            \"alert_status\": \"created\",\n            \"triggered_time\": null,\n            \"created\": \"2023-04-28T10:32:02.593864Z\",\n            \"updated\": \"2023-04-28T10:32:02.593867Z\",\n            \"user\": 2\n        },\n        {\n            \"id\": 51,\n            \"coin_id\": \"ada\",\n            \"alert_price\": \"0.3654972000\",\n            \"alert_status\": \"created\",\n            \"triggered_time\": null,\n            \"created\": \"2023-04-28T10:32:02.594403Z\",\n            \"updated\": \"2023-04-28T10:32:02.594407Z\",\n            \"user\": 2\n        },\n        {\n            \"id\": 55,\n            \"coin_id\": \"ada\",\n            \"alert_price\": \"0.4264134000\",\n            \"alert_status\": \"created\",\n            \"triggered_time\": null,\n            \"created\": \"2023-04-28T10:32:02.596240Z\",\n            \"updated\": \"2023-04-28T10:32:02.596243Z\",\n            \"user\": 2\n        },\n        {\n            \"id\": 56,\n            \"coin_id\": \"ada\",\n            \"alert_price\": \"0.4467188000\",\n            \"alert_status\": \"created\",\n            \"triggered_time\": null,\n            \"created\": \"2023-04-28T10:32:02.596723Z\",\n            \"updated\": \"2023-04-28T10:32:02.596727Z\",\n            \"user\": 2\n        },\n        {\n            \"id\": 57,\n            \"coin_id\": \"ada\",\n            \"alert_price\": \"0.4670242000\",\n            \"alert_status\": \"created\",\n            \"triggered_time\": null,\n            \"created\": \"2023-04-28T10:32:02.597200Z\",\n            \"updated\": \"2023-04-28T10:32:02.597203Z\",\n            \"user\": 2\n        },\n        {\n            \"id\": 61,\n            \"coin_id\": \"doge\",\n            \"alert_price\": \"0.0762432000\",\n            \"alert_status\": \"created\",\n            \"triggered_time\": null,\n            \"created\": \"2023-04-28T10:32:02.599214Z\",\n            \"updated\": \"2023-04-28T10:32:02.599217Z\",\n            \"user\": 2\n        },\n        {\n            \"id\": 63,\n            \"coin_id\": \"doge\",\n            \"alert_price\": \"0.0842688000\",\n            \"alert_status\": \"created\",\n            \"triggered_time\": null,\n            \"created\": \"2023-04-28T10:32:02.600197Z\",\n            \"updated\": \"2023-04-28T10:32:02.600201Z\",\n            \"user\": 2\n        },\n        {\n            \"id\": 65,\n            \"coin_id\": \"doge\",\n            \"alert_price\": \"0.0922944000\",\n            \"alert_status\": \"created\",\n            \"triggered_time\": null,\n            \"created\": \"2023-04-28T10:32:02.601170Z\",\n            \"updated\": \"2023-04-28T10:32:02.601173Z\",\n            \"user\": 2\n        },\n        {\n            \"id\": 3,\n            \"coin_id\": \"btc\",\n            \"alert_price\": \"27807.4500000000\",\n            \"alert_status\": \"triggered\",\n            \"triggered_time\": \"2023-04-28T10:32:16.652377Z\",\n            \"created\": \"2023-04-28T10:32:02.569445Z\",\n            \"updated\": \"2023-04-28T10:32:16.652406Z\",\n            \"user\": 2\n        },\n        {\n            \"id\": 13,\n            \"coin_id\": \"eth\",\n            \"alert_price\": \"1717.7490000000\",\n            \"alert_status\": \"triggered\",\n            \"triggered_time\": \"2023-04-28T10:32:16.660200Z\",\n            \"created\": \"2023-04-28T10:32:02.575239Z\",\n            \"updated\": \"2023-04-28T10:32:16.660206Z\",\n            \"user\": 2\n        },\n        {\n            \"id\": 28,\n            \"coin_id\": \"usdt\",\n            \"alert_price\": \"1.1000000000\",\n            \"alert_status\": \"triggered\",\n            \"triggered_time\": \"2023-04-28T10:32:16.665355Z\",\n            \"created\": \"2023-04-28T10:32:02.583161Z\",\n            \"updated\": \"2023-04-28T10:32:16.665359Z\",\n            \"user\": 2\n        },\n        {\n            \"id\": 42,\n            \"coin_id\": \"xrp\",\n            \"alert_price\": \"0.4481216500\",\n            \"alert_status\": \"triggered\",\n            \"triggered_time\": \"2023-04-28T10:32:16.669440Z\",\n            \"created\": \"2023-04-28T10:32:02.590042Z\",\n            \"updated\": \"2023-04-28T10:32:16.669446Z\",\n            \"user\": 2\n        },\n        {\n            \"id\": 60,\n            \"coin_id\": \"doge\",\n            \"alert_price\": \"0.0722304000\",\n            \"alert_status\": \"triggered\",\n            \"triggered_time\": \"2023-04-28T10:32:16.673998Z\",\n            \"created\": \"2023-04-28T10:32:02.598703Z\",\n            \"updated\": \"2023-04-28T10:32:16.674003Z\",\n            \"user\": 2\n        },\n        {\n            \"id\": 66,\n            \"coin_id\": \"btc\",\n            \"alert_price\": \"21000.0000000000\",\n            \"alert_status\": \"created\",\n            \"triggered_time\": null,\n            \"created\": \"2023-04-28T10:35:49.036850Z\",\n            \"updated\": \"2023-04-28T10:35:49.036909Z\",\n            \"user\": 2\n        },\n        {\n            \"id\": 67,\n            \"coin_id\": \"btc\",\n            \"alert_price\": \"28500.0000000000\",\n            \"alert_status\": \"created\",\n            \"triggered_time\": null,\n            \"created\": \"2023-04-28T11:10:12.781180Z\",\n            \"updated\": \"2023-04-28T11:10:12.781210Z\",\n            \"user\": 2\n        }\n    ]\n}"
+				},
+				{
+					"name": "List Alerts - Filter by status",
+					"originalRequest": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer {{access_token}}",
+								"type": "text"
+							}
+						],
+						"url": {
+							"raw": "http://localhost:8000/alerts/?page=1&alert_status=created",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8000",
+							"path": [
+								"alerts",
+								""
+							],
+							"query": [
+								{
+									"key": "page",
+									"value": "1",
+									"description": "Page number with respect to paginated response"
+								},
+								{
+									"key": "alert_status",
+									"value": "created",
+									"description": "Status of alert. Accepted Values: created, triggered, deleted"
+								}
+							]
+						}
+					},
+					"status": "OK",
+					"code": 200,
+					"_postman_previewlanguage": "json",
+					"header": [
+						{
+							"key": "Date",
+							"value": "Fri, 28 Apr 2023 11:24:01 GMT"
+						},
+						{
+							"key": "Server",
+							"value": "WSGIServer/0.2 CPython/3.11.3"
+						},
+						{
+							"key": "Content-Type",
+							"value": "application/json"
+						},
+						{
+							"key": "Vary",
+							"value": "Accept"
+						},
+						{
+							"key": "Allow",
+							"value": "GET, POST, HEAD, OPTIONS"
+						},
+						{
+							"key": "X-Frame-Options",
+							"value": "DENY"
+						},
+						{
+							"key": "Content-Length",
+							"value": "5828"
+						},
+						{
+							"key": "X-Content-Type-Options",
+							"value": "nosniff"
+						},
+						{
+							"key": "Referrer-Policy",
+							"value": "same-origin"
+						}
+					],
+					"cookie": [],
+					"body": "{\n    \"count\": 30,\n    \"next\": null,\n    \"previous\": null,\n    \"results\": [\n        {\n            \"id\": 5,\n            \"coin_id\": \"btc\",\n            \"alert_price\": \"29271.0000000000\",\n            \"alert_status\": \"created\",\n            \"triggered_time\": null,\n            \"created\": \"2023-04-28T10:32:02.570657Z\",\n            \"updated\": \"2023-04-28T10:32:02.570660Z\",\n            \"user\": 2\n        },\n        {\n            \"id\": 6,\n            \"coin_id\": \"btc\",\n            \"alert_price\": \"30734.5500000000\",\n            \"alert_status\": \"created\",\n            \"triggered_time\": null,\n            \"created\": \"2023-04-28T10:32:02.571236Z\",\n            \"updated\": \"2023-04-28T10:32:02.571241Z\",\n            \"user\": 2\n        },\n        {\n            \"id\": 8,\n            \"coin_id\": \"btc\",\n            \"alert_price\": \"32198.1000000000\",\n            \"alert_status\": \"created\",\n            \"triggered_time\": null,\n            \"created\": \"2023-04-28T10:32:02.572524Z\",\n            \"updated\": \"2023-04-28T10:32:02.572527Z\",\n            \"user\": 2\n        },\n        {\n            \"id\": 11,\n            \"coin_id\": \"btc\",\n            \"alert_price\": \"33661.6500000000\",\n            \"alert_status\": \"created\",\n            \"triggered_time\": null,\n            \"created\": \"2023-04-28T10:32:02.574157Z\",\n            \"updated\": \"2023-04-28T10:32:02.574160Z\",\n            \"user\": 2\n        },\n        {\n            \"id\": 12,\n            \"coin_id\": \"eth\",\n            \"alert_price\": \"1622.3185000000\",\n            \"alert_status\": \"created\",\n            \"triggered_time\": null,\n            \"created\": \"2023-04-28T10:32:02.574676Z\",\n            \"updated\": \"2023-04-28T10:32:02.574679Z\",\n            \"user\": 2\n        },\n        {\n            \"id\": 15,\n            \"coin_id\": \"eth\",\n            \"alert_price\": \"1908.6100000000\",\n            \"alert_status\": \"created\",\n            \"triggered_time\": null,\n            \"created\": \"2023-04-28T10:32:02.576206Z\",\n            \"updated\": \"2023-04-28T10:32:02.576209Z\",\n            \"user\": 2\n        },\n        {\n            \"id\": 18,\n            \"coin_id\": \"eth\",\n            \"alert_price\": \"2099.4710000000\",\n            \"alert_status\": \"created\",\n            \"triggered_time\": null,\n            \"created\": \"2023-04-28T10:32:02.577669Z\",\n            \"updated\": \"2023-04-28T10:32:02.577672Z\",\n            \"user\": 2\n        },\n        {\n            \"id\": 19,\n            \"coin_id\": \"eth\",\n            \"alert_price\": \"2194.9015000000\",\n            \"alert_status\": \"created\",\n            \"triggered_time\": null,\n            \"created\": \"2023-04-28T10:32:02.578180Z\",\n            \"updated\": \"2023-04-28T10:32:02.578184Z\",\n            \"user\": 2\n        },\n        {\n            \"id\": 22,\n            \"coin_id\": \"usdt\",\n            \"alert_price\": \"0.9000000000\",\n            \"alert_status\": \"created\",\n            \"triggered_time\": null,\n            \"created\": \"2023-04-28T10:32:02.580002Z\",\n            \"updated\": \"2023-04-28T10:32:02.580007Z\",\n            \"user\": 2\n        },\n        {\n            \"id\": 24,\n            \"coin_id\": \"usdt\",\n            \"alert_price\": \"0.9500000000\",\n            \"alert_status\": \"created\",\n            \"triggered_time\": null,\n            \"created\": \"2023-04-28T10:32:02.581300Z\",\n            \"updated\": \"2023-04-28T10:32:02.581304Z\",\n            \"user\": 2\n        },\n        {\n            \"id\": 25,\n            \"coin_id\": \"usdt\",\n            \"alert_price\": \"1.0000000000\",\n            \"alert_status\": \"created\",\n            \"triggered_time\": null,\n            \"created\": \"2023-04-28T10:32:02.581763Z\",\n            \"updated\": \"2023-04-28T10:32:02.581767Z\",\n            \"user\": 2\n        },\n        {\n            \"id\": 30,\n            \"coin_id\": \"usdt\",\n            \"alert_price\": \"1.1500000000\",\n            \"alert_status\": \"created\",\n            \"triggered_time\": null,\n            \"created\": \"2023-04-28T10:32:02.584348Z\",\n            \"updated\": \"2023-04-28T10:32:02.584351Z\",\n            \"user\": 2\n        },\n        {\n            \"id\": 35,\n            \"coin_id\": \"bnb\",\n            \"alert_price\": \"335.9580000000\",\n            \"alert_status\": \"created\",\n            \"triggered_time\": null,\n            \"created\": \"2023-04-28T10:32:02.586760Z\",\n            \"updated\": \"2023-04-28T10:32:02.586764Z\",\n            \"user\": 2\n        },\n        {\n            \"id\": 36,\n            \"coin_id\": \"bnb\",\n            \"alert_price\": \"351.9560000000\",\n            \"alert_status\": \"created\",\n            \"triggered_time\": null,\n            \"created\": \"2023-04-28T10:32:02.587250Z\",\n            \"updated\": \"2023-04-28T10:32:02.587254Z\",\n            \"user\": 2\n        },\n        {\n            \"id\": 37,\n            \"coin_id\": \"bnb\",\n            \"alert_price\": \"367.9540000000\",\n            \"alert_status\": \"created\",\n            \"triggered_time\": null,\n            \"created\": \"2023-04-28T10:32:02.587687Z\",\n            \"updated\": \"2023-04-28T10:32:02.587690Z\",\n            \"user\": 2\n        },\n        {\n            \"id\": 40,\n            \"coin_id\": \"xrp\",\n            \"alert_price\": \"0.4009509500\",\n            \"alert_status\": \"created\",\n            \"triggered_time\": null,\n            \"created\": \"2023-04-28T10:32:02.589099Z\",\n            \"updated\": \"2023-04-28T10:32:02.589102Z\",\n            \"user\": 2\n        },\n        {\n            \"id\": 43,\n            \"coin_id\": \"xrp\",\n            \"alert_price\": \"0.4717070000\",\n            \"alert_status\": \"created\",\n            \"triggered_time\": null,\n            \"created\": \"2023-04-28T10:32:02.590479Z\",\n            \"updated\": \"2023-04-28T10:32:02.590482Z\",\n            \"user\": 2\n        },\n        {\n            \"id\": 44,\n            \"coin_id\": \"xrp\",\n            \"alert_price\": \"0.4952923500\",\n            \"alert_status\": \"created\",\n            \"triggered_time\": null,\n            \"created\": \"2023-04-28T10:32:02.590969Z\",\n            \"updated\": \"2023-04-28T10:32:02.590972Z\",\n            \"user\": 2\n        },\n        {\n            \"id\": 46,\n            \"coin_id\": \"xrp\",\n            \"alert_price\": \"0.5188777000\",\n            \"alert_status\": \"created\",\n            \"triggered_time\": null,\n            \"created\": \"2023-04-28T10:32:02.591957Z\",\n            \"updated\": \"2023-04-28T10:32:02.591960Z\",\n            \"user\": 2\n        },\n        {\n            \"id\": 48,\n            \"coin_id\": \"xrp\",\n            \"alert_price\": \"0.5424630500\",\n            \"alert_status\": \"created\",\n            \"triggered_time\": null,\n            \"created\": \"2023-04-28T10:32:02.592915Z\",\n            \"updated\": \"2023-04-28T10:32:02.592918Z\",\n            \"user\": 2\n        },\n        {\n            \"id\": 50,\n            \"coin_id\": \"ada\",\n            \"alert_price\": \"0.3451918000\",\n            \"alert_status\": \"created\",\n            \"triggered_time\": null,\n            \"created\": \"2023-04-28T10:32:02.593864Z\",\n            \"updated\": \"2023-04-28T10:32:02.593867Z\",\n            \"user\": 2\n        },\n        {\n            \"id\": 51,\n            \"coin_id\": \"ada\",\n            \"alert_price\": \"0.3654972000\",\n            \"alert_status\": \"created\",\n            \"triggered_time\": null,\n            \"created\": \"2023-04-28T10:32:02.594403Z\",\n            \"updated\": \"2023-04-28T10:32:02.594407Z\",\n            \"user\": 2\n        },\n        {\n            \"id\": 55,\n            \"coin_id\": \"ada\",\n            \"alert_price\": \"0.4264134000\",\n            \"alert_status\": \"created\",\n            \"triggered_time\": null,\n            \"created\": \"2023-04-28T10:32:02.596240Z\",\n            \"updated\": \"2023-04-28T10:32:02.596243Z\",\n            \"user\": 2\n        },\n        {\n            \"id\": 56,\n            \"coin_id\": \"ada\",\n            \"alert_price\": \"0.4467188000\",\n            \"alert_status\": \"created\",\n            \"triggered_time\": null,\n            \"created\": \"2023-04-28T10:32:02.596723Z\",\n            \"updated\": \"2023-04-28T10:32:02.596727Z\",\n            \"user\": 2\n        },\n        {\n            \"id\": 57,\n            \"coin_id\": \"ada\",\n            \"alert_price\": \"0.4670242000\",\n            \"alert_status\": \"created\",\n            \"triggered_time\": null,\n            \"created\": \"2023-04-28T10:32:02.597200Z\",\n            \"updated\": \"2023-04-28T10:32:02.597203Z\",\n            \"user\": 2\n        },\n        {\n            \"id\": 61,\n            \"coin_id\": \"doge\",\n            \"alert_price\": \"0.0762432000\",\n            \"alert_status\": \"created\",\n            \"triggered_time\": null,\n            \"created\": \"2023-04-28T10:32:02.599214Z\",\n            \"updated\": \"2023-04-28T10:32:02.599217Z\",\n            \"user\": 2\n        },\n        {\n            \"id\": 63,\n            \"coin_id\": \"doge\",\n            \"alert_price\": \"0.0842688000\",\n            \"alert_status\": \"created\",\n            \"triggered_time\": null,\n            \"created\": \"2023-04-28T10:32:02.600197Z\",\n            \"updated\": \"2023-04-28T10:32:02.600201Z\",\n            \"user\": 2\n        },\n        {\n            \"id\": 65,\n            \"coin_id\": \"doge\",\n            \"alert_price\": \"0.0922944000\",\n            \"alert_status\": \"created\",\n            \"triggered_time\": null,\n            \"created\": \"2023-04-28T10:32:02.601170Z\",\n            \"updated\": \"2023-04-28T10:32:02.601173Z\",\n            \"user\": 2\n        },\n        {\n            \"id\": 66,\n            \"coin_id\": \"btc\",\n            \"alert_price\": \"21000.0000000000\",\n            \"alert_status\": \"created\",\n            \"triggered_time\": null,\n            \"created\": \"2023-04-28T10:35:49.036850Z\",\n            \"updated\": \"2023-04-28T10:35:49.036909Z\",\n            \"user\": 2\n        },\n        {\n            \"id\": 67,\n            \"coin_id\": \"btc\",\n            \"alert_price\": \"28500.0000000000\",\n            \"alert_status\": \"created\",\n            \"triggered_time\": null,\n            \"created\": \"2023-04-28T11:10:12.781180Z\",\n            \"updated\": \"2023-04-28T11:10:12.781210Z\",\n            \"user\": 2\n        }\n    ]\n}"
+				}
+			]
 		},
 		{
 			"name": "Retrieve Alert",
@@ -220,7 +913,7 @@
 					}
 				],
 				"url": {
-					"raw": "http://localhost:8000/alerts/4",
+					"raw": "http://localhost:8000/alerts/1",
 					"protocol": "http",
 					"host": [
 						"localhost"
@@ -228,11 +921,149 @@
 					"port": "8000",
 					"path": [
 						"alerts",
-						"4"
+						"1"
 					]
-				}
+				},
+				"description": "This API is used to retrieve an alert.\n\nThe ID of the alert to be deleted is passed in URL\n\n`/alerts/{alert_id}`"
 			},
-			"response": []
+			"response": [
+				{
+					"name": "Retrieve Alert - Valid alert ID",
+					"originalRequest": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer {{access_token}}",
+								"type": "text"
+							}
+						],
+						"url": {
+							"raw": "http://localhost:8000/alerts/6",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8000",
+							"path": [
+								"alerts",
+								"6"
+							]
+						}
+					},
+					"status": "OK",
+					"code": 200,
+					"_postman_previewlanguage": "json",
+					"header": [
+						{
+							"key": "Date",
+							"value": "Fri, 28 Apr 2023 11:32:17 GMT"
+						},
+						{
+							"key": "Server",
+							"value": "WSGIServer/0.2 CPython/3.11.3"
+						},
+						{
+							"key": "Content-Type",
+							"value": "application/json"
+						},
+						{
+							"key": "Vary",
+							"value": "Accept"
+						},
+						{
+							"key": "Allow",
+							"value": "GET, DELETE, HEAD, OPTIONS"
+						},
+						{
+							"key": "X-Frame-Options",
+							"value": "DENY"
+						},
+						{
+							"key": "Content-Length",
+							"value": "193"
+						},
+						{
+							"key": "X-Content-Type-Options",
+							"value": "nosniff"
+						},
+						{
+							"key": "Referrer-Policy",
+							"value": "same-origin"
+						}
+					],
+					"cookie": [],
+					"body": "{\n    \"id\": 6,\n    \"coin_id\": \"btc\",\n    \"alert_price\": \"30734.5500000000\",\n    \"alert_status\": \"created\",\n    \"triggered_time\": null,\n    \"created\": \"2023-04-28T10:32:02.571236Z\",\n    \"updated\": \"2023-04-28T10:32:02.571241Z\",\n    \"user\": 2\n}"
+				},
+				{
+					"name": "Retrieve Alert - Invalid/Inaccessible alert ID",
+					"originalRequest": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer {{access_token}}",
+								"type": "text"
+							}
+						],
+						"url": {
+							"raw": "http://localhost:8000/alerts/1",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8000",
+							"path": [
+								"alerts",
+								"1"
+							]
+						}
+					},
+					"status": "Not Found",
+					"code": 404,
+					"_postman_previewlanguage": "json",
+					"header": [
+						{
+							"key": "Date",
+							"value": "Fri, 28 Apr 2023 11:33:15 GMT"
+						},
+						{
+							"key": "Server",
+							"value": "WSGIServer/0.2 CPython/3.11.3"
+						},
+						{
+							"key": "Content-Type",
+							"value": "application/json"
+						},
+						{
+							"key": "Vary",
+							"value": "Accept"
+						},
+						{
+							"key": "Allow",
+							"value": "GET, DELETE, HEAD, OPTIONS"
+						},
+						{
+							"key": "X-Frame-Options",
+							"value": "DENY"
+						},
+						{
+							"key": "Content-Length",
+							"value": "23"
+						},
+						{
+							"key": "X-Content-Type-Options",
+							"value": "nosniff"
+						},
+						{
+							"key": "Referrer-Policy",
+							"value": "same-origin"
+						}
+					],
+					"cookie": [],
+					"body": "{\n    \"detail\": \"Not found.\"\n}"
+				}
+			]
 		},
 		{
 			"name": "Delete Alert",
@@ -246,7 +1077,7 @@
 					}
 				],
 				"url": {
-					"raw": "http://localhost:8000/alerts/4",
+					"raw": "http://localhost:8000/alerts/66",
 					"protocol": "http",
 					"host": [
 						"localhost"
@@ -254,11 +1085,145 @@
 					"port": "8000",
 					"path": [
 						"alerts",
-						"4"
+						"66"
 					]
-				}
+				},
+				"description": "This API is used to delete an alert.\n\nThe ID of the alert to be deleted is passed in URL\n\n`/alerts/{alert_id}`"
 			},
-			"response": []
+			"response": [
+				{
+					"name": "Delete Alert - Valid alert ID",
+					"originalRequest": {
+						"method": "DELETE",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer {{access_token}}",
+								"type": "text"
+							}
+						],
+						"url": {
+							"raw": "http://localhost:8000/alerts/66",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8000",
+							"path": [
+								"alerts",
+								"66"
+							]
+						}
+					},
+					"status": "No Content",
+					"code": 204,
+					"_postman_previewlanguage": "plain",
+					"header": [
+						{
+							"key": "Date",
+							"value": "Fri, 28 Apr 2023 11:28:15 GMT"
+						},
+						{
+							"key": "Server",
+							"value": "WSGIServer/0.2 CPython/3.11.3"
+						},
+						{
+							"key": "Vary",
+							"value": "Accept"
+						},
+						{
+							"key": "Allow",
+							"value": "GET, DELETE, HEAD, OPTIONS"
+						},
+						{
+							"key": "X-Frame-Options",
+							"value": "DENY"
+						},
+						{
+							"key": "Content-Length",
+							"value": "0"
+						},
+						{
+							"key": "X-Content-Type-Options",
+							"value": "nosniff"
+						},
+						{
+							"key": "Referrer-Policy",
+							"value": "same-origin"
+						}
+					],
+					"cookie": [],
+					"body": null
+				},
+				{
+					"name": "Delete Alert - Invalid/inaccessible alert ID",
+					"originalRequest": {
+						"method": "DELETE",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer {{access_token}}",
+								"type": "text"
+							}
+						],
+						"url": {
+							"raw": "http://localhost:8000/alerts/4",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8000",
+							"path": [
+								"alerts",
+								"4"
+							]
+						}
+					},
+					"status": "Not Found",
+					"code": 404,
+					"_postman_previewlanguage": "json",
+					"header": [
+						{
+							"key": "Date",
+							"value": "Fri, 28 Apr 2023 03:58:36 GMT"
+						},
+						{
+							"key": "Server",
+							"value": "WSGIServer/0.2 CPython/3.11.3"
+						},
+						{
+							"key": "Content-Type",
+							"value": "application/json"
+						},
+						{
+							"key": "Vary",
+							"value": "Accept"
+						},
+						{
+							"key": "Allow",
+							"value": "GET, DELETE, HEAD, OPTIONS"
+						},
+						{
+							"key": "X-Frame-Options",
+							"value": "DENY"
+						},
+						{
+							"key": "Content-Length",
+							"value": "23"
+						},
+						{
+							"key": "X-Content-Type-Options",
+							"value": "nosniff"
+						},
+						{
+							"key": "Referrer-Policy",
+							"value": "same-origin"
+						}
+					],
+					"cookie": [],
+					"body": "{\n    \"detail\": \"Not found.\"\n}"
+				}
+			]
 		}
 	]
 }
